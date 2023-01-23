@@ -41,7 +41,6 @@ def train_model(model, criterion, optimizer, dataloaders, scheduler,
                 # forward
                 outputs = model(inputs)
                 outputs = torch.mean(outputs)
-
                 loss = criterion(outputs, labels, phase)
                 # print(loss.float(), i end='')
                 running_loss += loss.item()
@@ -50,18 +49,16 @@ def train_model(model, criterion, optimizer, dataloaders, scheduler,
                     loss.backward()
                     optimizer.step()
                 # statistics
-                preds = (outputs.data > 0.5).float()
-                # print(preds)
-                print(labels.data)
+                preds = torch.unsqueeze((outputs.data > 0.5).float(),0)
                 running_corrects += torch.sum(preds == labels.data)
-                # confusion_matrix[phase].add(preds, labels.data)
+                confusion_matrix[phase].add(preds, labels.data)
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects / dataset_sizes[phase]
             costs[phase].append(epoch_loss)
             accs[phase].append(epoch_acc)
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss,
                                                          epoch_acc))
-            # print('Confusion Meter:\n', confusion_matrix[phase].value())
+            print('Confusion Meter:\n', confusion_matrix[phase].value())
             # deep copy the model
             if phase == 'valid':
                 scheduler.step()

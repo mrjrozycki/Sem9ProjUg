@@ -40,7 +40,7 @@ def train_model(model, criterion, optimizer, dataloaders, scheduler,
                 optimizer.zero_grad()
                 # forward
                 outputs = model(inputs)
-                outputs = torch.mean(outputs)
+                # outputs = torch.mean(outputs)
                 loss = criterion(outputs, labels, phase)
                 # print(loss.float(), i end='')
                 running_loss += loss.item()
@@ -49,7 +49,7 @@ def train_model(model, criterion, optimizer, dataloaders, scheduler,
                     loss.backward()
                     optimizer.step()
                 # statistics
-                preds = torch.unsqueeze((outputs.data > 0.5).float(),0)
+                preds = torch.squeeze((outputs.data > 0.5).float(),1)
                 running_corrects += torch.sum(preds == labels.data)
                 confusion_matrix[phase].add(preds, labels.data)
             epoch_loss = running_loss / dataset_sizes[phase]

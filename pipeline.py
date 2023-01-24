@@ -63,7 +63,7 @@ class ImageDataset(Dataset):
         sample = {'image': image, 'label': label}
         return sample
 
-def get_dataloaders(data, batch_size=1, study_level=False):
+def get_dataloaders(data, batch_size=2, study_level=False):
     '''
     Returns dataloader pipeline with data augmentation
     '''
@@ -71,7 +71,7 @@ def get_dataloaders(data, batch_size=1, study_level=False):
         'train': transforms.Compose([
                 transforms.Resize((1024, 1024)),
                 transforms.CenterCrop(600),
-                # transforms.Resize((300, 300)),
+                transforms.Resize((300, 300)),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomRotation(10),
                 transforms.ToTensor(),
@@ -80,7 +80,7 @@ def get_dataloaders(data, batch_size=1, study_level=False):
         'valid': transforms.Compose([
             transforms.Resize((1024, 1024)),
             transforms.CenterCrop(600),
-            # transforms.Resize((300, 300)),
+            transforms.Resize((300, 300)),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
